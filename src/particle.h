@@ -11,7 +11,9 @@
 
 class Particle {
  public:
-  void setInit(const ofVec2f &initPos);
+  Particle();
+  Particle(float f, const ofVec2f &g);
+  void setup(const ofVec2f &p, const ofVec2f &v);
   void update();
   void draw();
   void resetForce();

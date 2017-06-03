@@ -2,16 +2,20 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-  ofSetFrameRate(60);
-//  ofSetVerticalSync(false);
-//  ofSetFrameRate(0);
+//  ofSetFrameRate(60);
+  ofSetVerticalSync(false);
+  ofSetFrameRate(0);
   ofBackground(63);
   ofSetCircleResolution(4);
+  
+  // メッシュを点で描画
+  mesh_.setMode(OF_PRIMITIVE_POINTS);
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
   for (auto &p: particles_) {
+    p.resetForce();
     p.update();
   }
 }
@@ -19,16 +23,22 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
   ofSetColor(255);
+//  for (auto &p: particles_) {
+//    p.draw();
+//  }
+//  ofNoFill();
+//  ofBeginShape();
+//  for (auto &p: particles_) {
+//  ofCurveVertex(p.getPosition().x, p.getPosition().y);
+//  }
+//  ofEndShape();
+  mesh_.clear();
   for (auto &p: particles_) {
-    p.draw();
+    mesh_.addVertex(ofVec3f(p.getPosition().x, p.getPosition().y, 0));
   }
-  ofNoFill();
-  ofBeginShape();
-  for (auto &p: particles_) {
-  ofCurveVertex(p.getPosition().x, p.getPosition().y);
-  }
-  ofEndShape();
+  mesh_.draw();
 
+  ofSetColor(200);
   ofDrawBitmapString("particle num = " + ofToString(particles_.size()), 10, 20);
   ofDrawBitmapString("frameRate = " + ofToString(ofGetFrameRate()), 10, 40);
 }
@@ -46,22 +56,20 @@ void ofApp::keyReleased(int key) {
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ) {
+void ofApp::mouseMoved(int x, int y) {
   
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button) {
-//  for(int i = 0; i < 100; i ++) {
+  for(int i = 0; particles_.size() < 200000; i ++) {
   Particle p;
-  p.setFriction(0.01);
-  p.setGravity(0, 0.1);
-  p.setInit(ofVec2f(x, y));
   float length = ofRandom(30.0);
   float angle = ofRandom(PI * 2);
-  p.setVelocity(cos(angle) * length, sin(angle) * length);
+  ofVec2f v = ofVec2f(cos(angle) * length, sin(angle) * length);
+  p.setup(ofVec2f(x, y), v);
   particles_.push_back(p);
-//  }
+  }
 }
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {

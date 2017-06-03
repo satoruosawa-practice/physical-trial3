@@ -8,13 +8,21 @@
 
 #include "./particle.h"
 
-void Particle::setInit(const ofVec2f &initPos) {
-  position_.set(initPos);
-  force_.set(0, 0);
+Particle::Particle() {
+  friction_ = 0.01;
+  gravity_.set(0, 0.1);
+}
+
+Particle::Particle(float f, const ofVec2f &g)
+:friction_(f),
+gravity_(g) {}
+
+void Particle::setup(const ofVec2f &p, const ofVec2f &v) {
+  position_ = p;
+  velocity_ = v;
 }
 
 void Particle::update() {
-  resetForce();
   addForce(gravity_);
   updateForce();
   updatePos();

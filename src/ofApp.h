@@ -20,4 +20,5 @@ class ofApp : public ofBaseApp {
 
  private:
   std::vector<Particle> particles_;
+  ofVboMesh mesh_;
 };
