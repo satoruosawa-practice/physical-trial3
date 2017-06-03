@@ -24,7 +24,11 @@ class Particle {
   void addAttractionForce(const ofVec2f &posOfForce, float radius, float scale);
   void addRepulsionForce(const ofVec2f &posOfForce,float radius, float scale);
 
+  void addAttractionForce(Particle * targetP, float radius, float scale);
+  void addRepulsionForce(Particle * targetP, float radius, float scale);
+
   void bounceOfWalls();
+
   // getter
   const ofVec2f getPosition() {
     return position_;

@@ -9,8 +9,8 @@
 #include "./particle.h"
 
 Particle::Particle() {
-  friction_ = 0.01;
-  gravity_.set(0, 0.1);
+  friction_ = 0.0005;
+  gravity_.set(0, 0);
   mass_ = ofRandom(10);
   radius_ = 2;
 }
@@ -31,6 +31,7 @@ void Particle::update() {
   updateForce();
   updatePos();
   bounceOfWalls();
+
 }
 
 void Particle::draw() {
@@ -67,8 +68,26 @@ void Particle::addAttractionForce(const ofVec2f &posOfForce,
   if (bAmCloseEnough == true){
     float pct = 1 - (length / radius);
     diff.normalize();
-    force_.x = force_.x - diff.x * scale * pct;
-    force_.y = force_.y - diff.y * scale * pct;
+    force_ -= diff * scale * pct;
+  }
+}
+
+void Particle::addAttractionForce(Particle * targetP,
+                                  float radius, float scale) {
+  ofVec2f diff = position_ - targetP->getPosition();
+  float length = diff.length();
+  bool bAmCloseEnough = true;
+  if (radius > 0){
+    if (length > radius){
+      bAmCloseEnough = false;
+    }
+  }
+  if (bAmCloseEnough == true){
+    float pct = 1 - (length / radius);
+    diff.normalize();
+    ofVec2f addingForce = diff * scale * pct;
+    force_ -= addingForce;
+    targetP->addForce(addingForce);
   }
 }
 
@@ -85,8 +104,26 @@ void Particle::addRepulsionForce(const ofVec2f &posOfForce,
   if (bAmCloseEnough == true){
     float pct = 1 - (length / radius);
     diff.normalize();
-    force_.x = force_.x + diff.x * scale * pct;
-    force_.y = force_.y + diff.y * scale * pct;
+    force_ += diff * scale * pct;
+  }
+}
+
+void Particle::addRepulsionForce(Particle * targetP,
+                                 float radius, float scale) {
+  ofVec2f diff = position_ - targetP->getPosition();
+  float length = diff.length();
+  bool bAmCloseEnough = true;
+  if (radius > 0){
+    if (length > radius){
+      bAmCloseEnough = false;
+    }
+  }
+  if (bAmCloseEnough == true){
+    float pct = 1 - (length / radius);
+    diff.normalize();
+    ofVec2f addingForce = diff * scale * pct;
+    force_ += addingForce;
+    targetP->addForce(-addingForce);
   }
 }
 

@@ -8,20 +8,27 @@ void ofApp::setup() {
   ofBackground(63);
   ofSetCircleResolution(4);
   
-  // メッシュを点で描画
   mesh_.setMode(OF_PRIMITIVE_POINTS);
+  glEnable(GL_POINT_SMOOTH);
+  glPointSize(2.0);
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
-  while(particles_.size() > 100000) {
+  while(particles_.size() > 10000) {
     particles_.erase(particles_.begin(), particles_.begin() + 100);
   }
-  for (auto &p: particles_) {
-    p.resetForce();
-    p.addAttractionForce(ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2),
-                        1000, 1);
-    p.update();
+  
+  for (int i = 0; i < particles_.size(); i++){
+    particles_[i].resetForce();
+    for (int j = 0; j < i; j++){
+      particles_[i].addAttractionForce(&particles_[j], 120.0, 0.001);
+    }
+//    particles_[i].addAttractionForce(ofVec2f(ofGetWidth() / 2,
+//                                             ofGetHeight() / 2),
+//                                     1000, 0.13);
+    particles_[i].update();
   }
 }
 
@@ -68,7 +75,7 @@ void ofApp::mouseMoved(int x, int y) {
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button) {
 //    for(int i = 0; particles_.size() < 1000000; i ++) {
-  for(int i = 0; i < 100; i++) {
+  for(int i = 0; i < 10; i++) {
     Particle p = Particle();
     float length = ofRandom(3.0);
     float angle = ofRandom(PI * 2);
