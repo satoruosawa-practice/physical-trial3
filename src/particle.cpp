@@ -9,10 +9,10 @@
 #include "./particle.h"
 
 Particle::Particle() {
-  friction_ = 0.0005;
+  friction_ = 0.001;
   gravity_.set(0, 0);
-  mass_ = ofRandom(10);
-  radius_ = 2;
+  mass_ = ofRandom(3.0);
+  radius_ = pow(mass_, 1.0 / 3.0);
 }
 
 Particle::Particle(float f, const ofVec2f &g, float m, float r)

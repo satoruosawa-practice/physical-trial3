@@ -3,27 +3,28 @@
 //--------------------------------------------------------------
 void ofApp::setup() {
   ofSetFrameRate(60);
-  //  ofSetVerticalSync(false);
-  //  ofSetFrameRate(0);
+//    ofSetVerticalSync(false);
+//    ofSetFrameRate(0);
   ofBackground(63);
-  ofSetCircleResolution(4);
+//  ofSetCircleResolution(4);
   
-  mesh_.setMode(OF_PRIMITIVE_POINTS);
-  glEnable(GL_POINT_SMOOTH);
-  glPointSize(2.0);
+//  mesh_.setMode(OF_PRIMITIVE_POINTS);
+//  glEnable(GL_POINT_SMOOTH);
+//  glPointSize(2.0);
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
-  while(particles_.size() > 10000) {
+  while(particles_.size() > 2500) {
     particles_.erase(particles_.begin(), particles_.begin() + 100);
   }
   
   for (int i = 0; i < particles_.size(); i++){
     particles_[i].resetForce();
     for (int j = 0; j < i; j++){
-      particles_[i].addAttractionForce(&particles_[j], 120.0, 0.001);
+      float strength = particles_[j].getMass() * particles_[i].getMass() * 0.001;
+      particles_[i].addAttractionForce(&particles_[j], 200.0, strength);
     }
 //    particles_[i].addAttractionForce(ofVec2f(ofGetWidth() / 2,
 //                                             ofGetHeight() / 2),
@@ -35,20 +36,14 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
   ofSetColor(255);
-  //  for (auto &p: particles_) {
-  //    p.draw();
-  //  }
-  //  ofNoFill();
-  //  ofBeginShape();
-  //  for (auto &p: particles_) {
-  //  ofCurveVertex(p.getPosition().x, p.getPosition().y);
-  //  }
-  //  ofEndShape();
-  mesh_.clear();
-  for (auto &p: particles_) {
-    mesh_.addVertex(ofVec3f(p.getPosition().x, p.getPosition().y, 0));
-  }
-  mesh_.draw();
+    for (auto &p: particles_) {
+      p.draw();
+    }
+//  mesh_.clear();
+//  for (auto &p: particles_) {
+//    mesh_.addVertex(ofVec3f(p.getPosition().x, p.getPosition().y, 0));
+//  }
+//  mesh_.draw();
   
   ofSetColor(200);
   ofDrawBitmapString("particle num = " + ofToString(particles_.size()), 10, 20);
@@ -59,7 +54,16 @@ void ofApp::draw() {
 void ofApp::keyPressed(int key) {
   if (key == 'c') {
     particles_.clear();
+  } if (key == 'r') {
+  for(int i = 0; i < 1000; i++) {
+    Particle p = Particle();
+    float x = ofRandom(ofGetWidth());
+    float y = ofRandom(ofGetHeight());
+    p.setup(ofVec2f(x, y), ofVec2f(0, 0));
+    particles_.push_back(p);
   }
+  }
+
 }
 
 //--------------------------------------------------------------

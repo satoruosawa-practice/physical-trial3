@@ -30,9 +30,8 @@ class Particle {
   void bounceOfWalls();
 
   // getter
-  const ofVec2f getPosition() {
-    return position_;
-  }
+  const ofVec2f getPosition() { return position_; }
+  const float getMass() { return mass_; }
 
  private:
   ofVec2f position_;
