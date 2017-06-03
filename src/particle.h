@@ -6,10 +6,6 @@
 //
 //
 
-#ifndef particle_h
-#define particle_h
-
-
 #pragma once // インクルードガード（コンパイルの際に一度しか読みこまれないように）
 #include "ofMain.h" // openFrameworksの機能を使えるように
 
@@ -52,5 +48,3 @@ public: // 外部に公開する領域
   // 重力
   ofVec2f gravity;
 };
-
-#endif /* particle_h */

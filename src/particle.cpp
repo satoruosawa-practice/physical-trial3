@@ -18,7 +18,7 @@ void Particle::update(){
 
 // 描画
 void Particle::draw(){
-  ofCircle(position, 2);
+  ofDrawCircle(position, 2);
 }
 
 // 初期設定
