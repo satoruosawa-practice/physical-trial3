@@ -8,69 +8,61 @@
 
 #include "./particle.h"
 
-// 更新
-void Particle::update(){
+void Particle::setInit(const ofVec2f &initPos) {
+  position_.set(initPos);
+  force_.set(0, 0);
+}
+
+void Particle::update() {
   resetForce();
-  addForce(gravity);
+  addForce(gravity_);
   updateForce();
   updatePos();
+  checkBounds(0, 0, ofGetWidth(), ofGetHeight());
+  constrain(0, 0, ofGetWidth(), ofGetHeight());
 }
 
-// 描画
-void Particle::draw(){
-  ofDrawCircle(position, 2);
+void Particle::draw() {
+  ofDrawCircle(position_, 2);
 }
 
-// 初期設定
-void Particle::setInit(ofVec2f initPos){
-  position.x = initPos.x;
-  position.y = initPos.y;
-  force.set(0, 0);
+void Particle::resetForce() {
+  force_.set(0, 0);
 }
 
-// 力をリセット
-void Particle::resetForce(){
-  force.set(0, 0);
+void Particle::addForce(const ofVec2f &f) {
+  force_ += f;
 }
 
-// 力を加える
-void Particle::addForce(ofVec2f _force){
-  force += _force;
+void Particle::updateForce() {
+  force_ -= velocity_ * friction_;
 }
 
-// 力を更新
-void Particle::updateForce(){
-  force -= velocity * friction;
+void Particle::updatePos() {
+  velocity_ += force_;
+  position_ += velocity_;
 }
 
-// 位置の更新
-void Particle::updatePos(){
-  velocity += force;
-  position += velocity;
-}
-
-// 画面からはみ出たらバウンドさせる
-void Particle::checkBounds(float xmin, float ymin, float xmax, float ymax){
-  if (position.x < xmin || position.x > xmax) {
-    velocity.x *= -1;
+void Particle::checkBounds(float xmin, float ymin, float xmax, float ymax) {
+  if (position_.x < xmin || position_.x > xmax) {
+    velocity_.x *= -1;
   }
-  if (position.y < ymin || position.y > ymax) {
-    velocity.y *= -1;
+  if (position_.y < ymin || position_.y > ymax) {
+    velocity_.y *= -1;
   }
 }
 
-// 位置を枠内に収める
-void Particle::constrain(float xmin, float ymin, float xmax, float ymax){
-  if (position.x < xmin) {
-    position.x = xmin + (xmin - position.x);
+void Particle::constrain(float xmin, float ymin, float xmax, float ymax) {
+  if (position_.x < xmin) {
+    position_.x = xmin + (xmin - position_.x);
   }
-  if (position.x > xmax) {
-    position.x = xmax - (position.x - xmax);
+  if (position_.x > xmax) {
+    position_.x = xmax - (position_.x - xmax);
   }
-  if (position.y < ymin) {
-    position.y = ymin + (ymin - position.y);
+  if (position_.y < ymin) {
+    position_.y = ymin + (ymin - position_.y);
   }
-  if (position.y > ymax) {
-    position.y = ymax - (position.y - ymax);
+  if (position_.y > ymax) {
+    position_.y = ymax - (position_.y - ymax);
   }
 }
