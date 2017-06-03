@@ -12,7 +12,7 @@
 class Particle {
  public:
   Particle();
-  Particle(float f, const ofVec2f &g, float m);
+  Particle(float f, const ofVec2f &g, float m, float r);
   void setup(const ofVec2f &p, const ofVec2f &v);
   void update();
   void draw();
@@ -20,6 +20,10 @@ class Particle {
   void addForce(const ofVec2f &f);
   void updateForce();
   void updatePos();
+
+  void addAttractionForce(const ofVec2f &posOfForce, float radius, float scale);
+  void addRepulsionForce(const ofVec2f &posOfForce,float radius, float scale);
+
   void bounceOfWalls();
   // getter
   const ofVec2f getPosition() {
@@ -33,4 +37,5 @@ class Particle {
   float friction_;
   ofVec2f gravity_;
   float mass_;
+  float radius_;
 };

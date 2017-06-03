@@ -12,12 +12,14 @@ Particle::Particle() {
   friction_ = 0.01;
   gravity_.set(0, 0.1);
   mass_ = ofRandom(10);
+  radius_ = 2;
 }
 
-Particle::Particle(float f, const ofVec2f &g, float m)
+Particle::Particle(float f, const ofVec2f &g, float m, float r)
 :friction_(f),
 gravity_(g),
-mass_(m) {}
+mass_(m),
+radius_(r) {}
 
 void Particle::setup(const ofVec2f &p, const ofVec2f &v) {
   position_ = p;
@@ -32,7 +34,7 @@ void Particle::update() {
 }
 
 void Particle::draw() {
-  ofDrawCircle(position_, 2);
+  ofDrawCircle(position_, radius_);
 }
 
 void Particle::resetForce() {
@@ -50,6 +52,42 @@ void Particle::updateForce() {
 void Particle::updatePos() {
   velocity_ += force_;
   position_ += velocity_;
+}
+
+void Particle::addAttractionForce(const ofVec2f &posOfForce,
+                                  float radius, float scale) {
+  ofVec2f diff = position_ - posOfForce;
+  float length = diff.length();
+  bool bAmCloseEnough = true;
+  if (radius > 0){
+    if (length > radius){
+      bAmCloseEnough = false;
+    }
+  }
+  if (bAmCloseEnough == true){
+    float pct = 1 - (length / radius);
+    diff.normalize();
+    force_.x = force_.x - diff.x * scale * pct;
+    force_.y = force_.y - diff.y * scale * pct;
+  }
+}
+
+void Particle::addRepulsionForce(const ofVec2f &posOfForce,
+                                 float radius, float scale) {
+  ofVec2f diff = position_ - posOfForce;
+  float length = diff.length();
+  bool bAmCloseEnough = true;
+  if (radius > 0){
+    if (length > radius){
+      bAmCloseEnough = false;
+    }
+  }
+  if (bAmCloseEnough == true){
+    float pct = 1 - (length / radius);
+    diff.normalize();
+    force_.x = force_.x + diff.x * scale * pct;
+    force_.y = force_.y + diff.y * scale * pct;
+  }
 }
 
 void Particle::bounceOfWalls() {

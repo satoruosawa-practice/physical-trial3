@@ -14,8 +14,13 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
+  while(particles_.size() > 100000) {
+    particles_.erase(particles_.begin(), particles_.begin() + 100);
+  }
   for (auto &p: particles_) {
     p.resetForce();
+    p.addAttractionForce(ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2),
+                        1000, 1);
     p.update();
   }
 }
