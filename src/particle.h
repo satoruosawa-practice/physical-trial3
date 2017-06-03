@@ -30,6 +30,10 @@ class Particle {
   void setVelocity(float x, float y) {
     velocity_.set(x, y);
   }
+  // getter
+  const ofVec2f getPosition() {
+    return position_;
+  }
 
  private:
   ofVec2f position_;
