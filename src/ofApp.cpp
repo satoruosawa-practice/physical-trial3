@@ -2,15 +2,15 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-  ofSetFrameRate(60);
-//    ofSetVerticalSync(false);
-//    ofSetFrameRate(0);
+//  ofSetFrameRate(60);
+    ofSetVerticalSync(false);
+    ofSetFrameRate(0);
   ofBackground(63);
   
   for(int i = 0; i < 100; i++) {
     Particle p;
     float x = ofGetWidth()/2 + 100 * cos ( (i / 200.0) * TWO_PI);
-    float y = ofGetHeight()/2 + 100 * sin ( (i / 200.0) * TWO_PI);
+    float y = ofGetHeight()/5 + 100 * sin ( (i / 200.0) * TWO_PI);
     p.setup(ofVec2f(x, y), ofVec2f(0,0));
     p.setFriction(0.04);
     particles_.push_back(p);
@@ -31,7 +31,26 @@ void ofApp::update() {
   
   for (int i = 0; i < particles_.size(); i++){
 //      particles_[i].addAttractionForce(ofVec2f(mouseX, mouseY), 200, 1.0);
-      particles_[i].addRepulsionForce(ofVec2f(mouseX, mouseY), 200, 1.0);
+      particles_[i].addRepulsionForce(ofVec2f(mouseX, mouseY), 200, 3.0);
+    particles_[i].addRepulsionForce(ofVec2f(0, ofGetHeight()),
+                                    ofVec2f(ofGetWidth(), ofGetHeight()),
+                                    20, 1.0);
+    
+    for (int j = 0; j < 3; j++) {
+      particles_[i].addRepulsionForce(ofVec2f(0, ofGetHeight() * float(j) / 3.0),
+                                      ofVec2f(ofGetWidth(), ofGetHeight() * (float(j) / 3.0 + 1.0 / 12.0)),
+                                      20, 1.0);
+      particles_[i].addRepulsionForce(ofVec2f(ofGetWidth(), ofGetHeight() * (float(j) / 3.0 + 1.0 / 12.0)),
+                                      ofVec2f(0, ofGetHeight() * (float(j) / 3.0 + 2.0 / 12.0)),
+                                      20, 1.0);
+      particles_[i].addRepulsionForce(ofVec2f(0, ofGetHeight() * (float(j) / 3.0 + 3.0 / 12.0)),
+                                      ofVec2f(ofGetWidth(), ofGetHeight() * (float(j) / 3.0 + 2.0 / 12.0)),
+                                      20, 1.0);
+      particles_[i].addRepulsionForce(ofVec2f(ofGetWidth(), ofGetHeight() * (float(j) / 3.0 + 4.0 / 12.0)),
+                                      ofVec2f(0, ofGetHeight() * (float(j) / 3.0 + 3.0 / 12.0)),
+                                      20, 1.0);
+    }
+    
     for (int j = 0; j < i; j++){
       particles_[i].addRepulsionForce(&particles_[j], 50, 0.1);
     }

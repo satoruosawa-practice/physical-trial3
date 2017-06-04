@@ -27,6 +27,10 @@ class Particle {
   void addAttractionForce(Particle * targetP, float radius, float scale);
   void addRepulsionForce(Particle * targetP, float radius, float scale);
 
+  void addRepulsionForce(const ofVec2f &posOfFrcLineA,
+                         const ofVec2f &posOfFrcLineB,
+                         float radius, float scale);
+
   void bounceOfWalls();
 
   // setter

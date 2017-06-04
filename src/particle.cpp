@@ -10,7 +10,7 @@
 
 Particle::Particle() {
   friction_ = 0.001;
-  gravity_.set(0, 0.1);
+  gravity_.set(0, 0.2);
   mass_ = 3;
   radius_ = 3;
   bFixed_ = false;
@@ -112,6 +112,24 @@ void Particle::addRepulsionForce(const ofVec2f &posOfForce,
     force_ += diff * scale * pct;
   }
 }
+
+void Particle::addRepulsionForce(const ofVec2f &posOfFrcLineA,
+                                 const ofVec2f &posOfFrcLineB,
+                                 float radius, float scale) {
+  ofVec2f normalOfLine = (posOfFrcLineA - posOfFrcLineB).getPerpendicular();
+  float diff_length = abs((posOfFrcLineA - position_).dot(normalOfLine));
+  bool bAmCloseEnough = true;
+  if (radius > 0){
+    if (diff_length > radius){
+      bAmCloseEnough = false;
+    }
+  }
+  if (bAmCloseEnough == true){
+    float pct = 1 - (diff_length / radius);
+    force_ += normalOfLine * scale * pct;
+  }
+}
+
 
 void Particle::addRepulsionForce(Particle * targetP,
                                  float radius, float scale) {
