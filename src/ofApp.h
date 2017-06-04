@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "./particle.h"
+#include "./spring.h"
 
 class ofApp : public ofBaseApp {
  public:
@@ -19,6 +20,8 @@ class ofApp : public ofBaseApp {
   void gotMessage(ofMessage msg);
 
  private:
-  std::vector<Particle> particles_;
-  ofVboMesh mesh_;
+//  std::vector<Particle> particles_;
+  Particle particle_a_;
+  Particle particle_b_;
+  Spring mySpring_;
 };

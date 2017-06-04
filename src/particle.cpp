@@ -10,16 +10,19 @@
 
 Particle::Particle() {
   friction_ = 0.001;
-  gravity_.set(0, 0);
+  gravity_.set(0, 1.0);
   mass_ = ofRandom(3.0);
   radius_ = pow(mass_, 1.0 / 3.0);
+  bFixed_ = false;
 }
 
 Particle::Particle(float f, const ofVec2f &g, float m, float r)
 :friction_(f),
 gravity_(g),
 mass_(m),
-radius_(r) {}
+radius_(r) {
+  bFixed_ = false;
+}
 
 void Particle::setup(const ofVec2f &p, const ofVec2f &v) {
   position_ = p;
@@ -51,8 +54,10 @@ void Particle::updateForce() {
 }
 
 void Particle::updatePos() {
-  velocity_ += force_;
-  position_ += velocity_;
+  if (!bFixed_) {
+    velocity_ += force_;
+    position_ += velocity_;
+  }
 }
 
 void Particle::addAttractionForce(const ofVec2f &posOfForce,
@@ -85,9 +90,9 @@ void Particle::addAttractionForce(Particle * targetP,
   if (bAmCloseEnough == true){
     float pct = 1 - (length / radius);
     diff.normalize();
-    ofVec2f addingForce = diff * scale * pct;
-    force_ -= addingForce;
-    targetP->addForce(addingForce);
+    ofVec2f frcToAdd = diff * scale * pct;
+    force_ -= frcToAdd;
+    targetP->addForce(frcToAdd);
   }
 }
 
@@ -121,9 +126,9 @@ void Particle::addRepulsionForce(Particle * targetP,
   if (bAmCloseEnough == true){
     float pct = 1 - (length / radius);
     diff.normalize();
-    ofVec2f addingForce = diff * scale * pct;
-    force_ += addingForce;
-    targetP->addForce(-addingForce);
+    ofVec2f frcToAdd = diff * scale * pct;
+    force_ += frcToAdd;
+    targetP->addForce(-frcToAdd);
   }
 }
 

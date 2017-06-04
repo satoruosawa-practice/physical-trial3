@@ -29,6 +29,10 @@ class Particle {
 
   void bounceOfWalls();
 
+  // setter
+  void setFriction(float f) { friction_ = f; }
+  void setPosition(const ofVec2f &p) { position_ = p; }
+  void setBFixed(bool b) { bFixed_ = b;}
   // getter
   const ofVec2f getPosition() { return position_; }
   const float getMass() { return mass_; }
@@ -41,4 +45,6 @@ class Particle {
   ofVec2f gravity_;
   float mass_;
   float radius_;
+
+  bool bFixed_;
 };

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		872B6C071EE3082D00CBEA7D /* spring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 872B6C051EE3082D00CBEA7D /* spring.cpp */; };
 		8739A2ED1EE26E460073821F /* particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8739A2EB1EE26E460073821F /* particle.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
@@ -43,6 +44,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		872B6C051EE3082D00CBEA7D /* spring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spring.cpp; sourceTree = "<group>"; };
+		872B6C061EE3082D00CBEA7D /* spring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spring.h; sourceTree = "<group>"; };
 		8739A2EB1EE26E460073821F /* particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particle.cpp; sourceTree = "<group>"; };
 		8739A2EC1EE26E460073821F /* particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particle.h; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -110,6 +113,8 @@
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				8739A2EB1EE26E460073821F /* particle.cpp */,
 				8739A2EC1EE26E460073821F /* particle.h */,
+				872B6C051EE3082D00CBEA7D /* spring.cpp */,
+				872B6C061EE3082D00CBEA7D /* spring.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -212,6 +217,7 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
+				872B6C071EE3082D00CBEA7D /* spring.cpp in Sources */,
 				8739A2ED1EE26E460073821F /* particle.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
