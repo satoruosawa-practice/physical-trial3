@@ -10,9 +10,9 @@
 
 Particle::Particle() {
   friction_ = 0.001;
-  gravity_.set(0, 1.0);
-  mass_ = ofRandom(3.0);
-  radius_ = pow(mass_, 1.0 / 3.0);
+  gravity_.set(0, 0.1);
+  mass_ = 3;
+  radius_ = 3;
   bFixed_ = false;
 }
 

@@ -7,46 +7,58 @@ void ofApp::setup() {
 //    ofSetFrameRate(0);
   ofBackground(63);
   
-  particle_a_.setup(ofVec2f(400, 400), ofVec2f(0,0));
-  particle_a_.setFriction(0.04);
-  
-  particle_b_.setup(ofVec2f(400, 400), ofVec2f(0,0));
-  particle_b_.setFriction(0.04);
-  
-
-  mySpring_.setup(100, 0.1);
-  
-  mySpring_.setParticles(&particle_a_, &particle_b_);
+  for(int i = 0; i < 100; i++) {
+    Particle p;
+    float x = ofGetWidth()/2 + 100 * cos ( (i / 200.0) * TWO_PI);
+    float y = ofGetHeight()/2 + 100 * sin ( (i / 200.0) * TWO_PI);
+    p.setup(ofVec2f(x, y), ofVec2f(0,0));
+    p.setFriction(0.04);
+    particles_.push_back(p);
+  }
+  for (int i = 0; i < particles_.size(); i ++) {
+    Spring s;
+    s.setup(0, 0.6);
+    s.setParticles(&particles_[i], &particles_[(i + 1) % particles_.size()]);
+    springs_.push_back(s);
+  }
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
-  particle_a_.resetForce();
-  particle_b_.resetForce();
+  for (auto &p : particles_) {
+    p.resetForce();
+  }
   
-  mySpring_.update();
+  for (int i = 0; i < particles_.size(); i++){
+//      particles_[i].addAttractionForce(ofVec2f(mouseX, mouseY), 200, 1.0);
+      particles_[i].addRepulsionForce(ofVec2f(mouseX, mouseY), 200, 1.0);
+    for (int j = 0; j < i; j++){
+      particles_[i].addRepulsionForce(&particles_[j], 50, 0.1);
+    }
+  }
+
   
-  particle_a_.bounceOfWalls();
-  particle_a_.update();
-  
-  particle_b_.bounceOfWalls();
-  particle_b_.update();
+  for (auto &s : springs_) {
+    s.update();
+  }
+  for (auto &p : particles_) {
+    p.update();
+  }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+
+  
   ofSetColor(255);
-  
-  ofSetColor(191);
-  mySpring_.draw();
-  
-  ofSetHexColor(0x3399ff);
-  particle_a_.draw();
-  particle_b_.draw();
+  ofBeginShape();
+  for (int i = 0; i < particles_.size(); i++){
+    ofVertex(particles_[i].getPosition().x, particles_[i].getPosition().y);
+  }
+  ofEndShape();
 
   ofSetColor(200);
   ofDrawBitmapString("frameRate = " + ofToString(ofGetFrameRate()), 10, 20);
-
 }
 
 //--------------------------------------------------------------
@@ -55,7 +67,6 @@ void ofApp::keyPressed(int key) {
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key) {
-  
 }
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y) {
@@ -63,17 +74,17 @@ void ofApp::mouseMoved(int x, int y) {
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-  particle_a_.setPosition(ofVec2f(x, y));
+  particles_[0].setPosition(ofVec2f(x, y));
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-  particle_a_.setBFixed(true);
+  particles_[0].setBFixed(true);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-  particle_a_.setBFixed(false);
+  particles_[0].setBFixed(false);
 }
 
 
