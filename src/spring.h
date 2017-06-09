@@ -24,6 +24,7 @@ class Spring {
     particleA_ = a;
     particleB_ = b;
   }
+  void setDistance(const float d) { distance_ = d; }
 
  private:
   Particle *particleA_;

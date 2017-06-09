@@ -2,82 +2,86 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-//  ofSetFrameRate(60);
-    ofSetVerticalSync(false);
-    ofSetFrameRate(0);
-  ofBackground(63);
+    ofSetFrameRate(60);
+//  ofSetVerticalSync(false);
+//  ofSetFrameRate(0);
   
-  for(int i = 0; i < 100; i++) {
-    Particle p;
-    float x = ofGetWidth()/2 + 100 * cos ( (i / 200.0) * TWO_PI);
-    float y = ofGetHeight()/5 + 100 * sin ( (i / 200.0) * TWO_PI);
-    p.setup(ofVec2f(x, y), ofVec2f(0,0));
-    p.setFriction(0.04);
-    particles_.push_back(p);
+  ofSetBackgroundAuto(false);
+		
+  Particle myParticle;
+  myParticle.setup(ofVec2f(400,400),ofVec2f(0,0));
+  particles_.push_back(myParticle);
+  
+  myParticle.setup(ofVec2f(400,500),ofVec2f(0,0));
+  particles_.push_back(myParticle);
+  
+  myParticle.setup(ofVec2f(500,500),ofVec2f(0,0));
+  particles_.push_back(myParticle);
+  
+  myParticle.setup(ofVec2f(500,400),ofVec2f(0,0));
+  particles_.push_back(myParticle);
+  
+  Spring mySpring;
+		
+  for (int i = 0; i < particles_.size(); i++) {
+    mySpring.setup(100, 0.2f);
+    mySpring.setParticles(&particles_[i],
+                          &particles_[(i+1) % particles_.size()]);
+    springs_.push_back(mySpring);
   }
-  for (int i = 0; i < particles_.size(); i ++) {
-    Spring s;
-    s.setup(0, 0.6);
-    s.setParticles(&particles_[i], &particles_[(i + 1) % particles_.size()]);
-    springs_.push_back(s);
-  }
+  
+  mySpring.setup((particles_[0].getPosition() -
+                  particles_[2].getPosition()).length(), 0.2f);
+  mySpring.setParticles(&particles_[0], &particles_[2]);
+  springs_.push_back(mySpring);
+  
+  mySpring.setup((particles_[1].getPosition() -
+                  particles_[3].getPosition()).length(), 0.2f);
+  mySpring.setParticles(&particles_[1], &particles_[3]);
+  springs_.push_back(mySpring);
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
+  springs_[0].setDistance(100 + 50 * sin(ofGetElapsedTimef() * 8));
+  springs_[2].setDistance(100 + 50 * sin(ofGetElapsedTimef() * 8 + PI));
+  
   for (auto &p : particles_) {
     p.resetForce();
   }
   
-  for (int i = 0; i < particles_.size(); i++){
-//      particles_[i].addAttractionForce(ofVec2f(mouseX, mouseY), 200, 1.0);
-      particles_[i].addRepulsionForce(ofVec2f(mouseX, mouseY), 200, 3.0);
-    particles_[i].addRepulsionForce(ofVec2f(0, ofGetHeight()),
-                                    ofVec2f(ofGetWidth(), ofGetHeight()),
-                                    20, 1.0);
-    
-    for (int j = 0; j < 3; j++) {
-      particles_[i].addRepulsionForce(ofVec2f(0, ofGetHeight() * float(j) / 3.0),
-                                      ofVec2f(ofGetWidth(), ofGetHeight() * (float(j) / 3.0 + 1.0 / 12.0)),
-                                      20, 1.0);
-      particles_[i].addRepulsionForce(ofVec2f(ofGetWidth(), ofGetHeight() * (float(j) / 3.0 + 1.0 / 12.0)),
-                                      ofVec2f(0, ofGetHeight() * (float(j) / 3.0 + 2.0 / 12.0)),
-                                      20, 1.0);
-      particles_[i].addRepulsionForce(ofVec2f(0, ofGetHeight() * (float(j) / 3.0 + 3.0 / 12.0)),
-                                      ofVec2f(ofGetWidth(), ofGetHeight() * (float(j) / 3.0 + 2.0 / 12.0)),
-                                      20, 1.0);
-      particles_[i].addRepulsionForce(ofVec2f(ofGetWidth(), ofGetHeight() * (float(j) / 3.0 + 4.0 / 12.0)),
-                                      ofVec2f(0, ofGetHeight() * (float(j) / 3.0 + 3.0 / 12.0)),
-                                      20, 1.0);
-    }
-    
-    for (int j = 0; j < i; j++){
-      particles_[i].addRepulsionForce(&particles_[j], 50, 0.1);
-    }
+  for (auto &p : particles_) {
+    p.addForce(ofVec2f(0, 0.1f));
+    p.addRepulsionForce(ofVec2f(mouseX, mouseY), 300, 0.7f);
   }
-
   
   for (auto &s : springs_) {
     s.update();
   }
+  
   for (auto &p : particles_) {
     p.update();
   }
+  
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-
   
-  ofSetColor(255);
-  ofBeginShape();
-  for (int i = 0; i < particles_.size(); i++){
-    ofVertex(particles_[i].getPosition().x, particles_[i].getPosition().y);
+  ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+  ofSetColor(0, 0, 0, 63);
+  ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+  
+  ofSetColor(255, 255, 255);
+  for (auto &s : springs_) {
+    s.draw();
   }
-  ofEndShape();
-
-  ofSetColor(200);
-  ofDrawBitmapString("frameRate = " + ofToString(ofGetFrameRate()), 10, 20);
+  
+  ofSetColor(31, 127, 255);
+  for (auto &p : particles_) {
+    p.draw();
+  }
+  
 }
 
 //--------------------------------------------------------------
@@ -93,17 +97,14 @@ void ofApp::mouseMoved(int x, int y) {
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-  particles_[0].setPosition(ofVec2f(x, y));
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-  particles_[0].setBFixed(true);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-  particles_[0].setBFixed(false);
 }
 
 
